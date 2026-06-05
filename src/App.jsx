@@ -358,19 +358,28 @@ export default function App() {
       </div>
 
       {/* ── Controls ──────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', gap: 8, padding: '6px 10px 8px', flexShrink: 0 }}>
+      <div style={{ display: 'flex', gap: 8, padding: '6px 10px 8px', flexShrink: 0, alignItems: 'center' }}>
+
+        {/* Précédent */}
         <button
           onClick={skipPrev}
           aria-label="Précédent"
           style={{
-            width: 46, height: 46, borderRadius: 999,
-            background: 'var(--surface2)',
-            border: '1px solid var(--border2)',
-            color: 'var(--text2)', fontSize: 16,
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
+            width: 46, height: 46, borderRadius: 14,
+            background: `${accentColor}18`,
+            border: `1.5px solid ${accentColor}55`,
+            color: accentColor,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0
           }}
-        >⏮</button>
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <polygon points="14,3 6,10 14,17" fill={accentColor} opacity="0.9"/>
+            <rect x="4" y="3" width="2.5" height="14" rx="1.2" fill={accentColor}/>
+          </svg>
+        </button>
 
+        {/* Play / Pause */}
         <button
           onClick={togglePlay}
           style={{
@@ -382,23 +391,32 @@ export default function App() {
             color: playing ? '#f9f002' : '#fff',
             fontFamily: "'Bebas Neue',sans-serif",
             fontSize: 20, letterSpacing: 3,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            boxShadow: playing ? 'none' : `0 0 18px ${accentColor}55`
           }}
         >
           {playing ? '⏸ PAUSE' : '▶ DÉMARRER'}
         </button>
 
+        {/* Suivant */}
         <button
           onClick={skipNext}
           aria-label="Suivant"
           style={{
-            width: 52, height: 52, borderRadius: 999,
-            background: 'var(--surface2)',
-            border: '1px solid var(--border2)',
-            color: 'var(--text2)', fontSize: 16,
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
+            width: 46, height: 46, borderRadius: 14,
+            background: `${accentColor}18`,
+            border: `1.5px solid ${accentColor}55`,
+            color: accentColor,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0
           }}
-        >⏭</button>
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <polygon points="6,3 14,10 6,17" fill={accentColor} opacity="0.9"/>
+            <rect x="13.5" y="3" width="2.5" height="14" rx="1.2" fill={accentColor}/>
+          </svg>
+        </button>
+
       </div>
 
     </div>
