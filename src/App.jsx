@@ -225,17 +225,16 @@ export default function App() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexShrink: 0
       }}>
-        <button onClick={goHome} style={{
-          background: 'none', border: 'none', color: 'var(--text3)',
-          fontSize: 18, padding: '4px 6px', borderRadius: 8
-        }}>←</button>
-
-        <h1 style={{
-          fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: 20, letterSpacing: 4, lineHeight: 1,
-          background: `linear-gradient(90deg, ${accentColor} 0%, #f9f002 100%)`,
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-        }}>
+        <h1
+          onClick={goHome}
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 20, letterSpacing: 4, lineHeight: 1,
+            background: `linear-gradient(90deg, ${accentColor} 0%, #f9f002 100%)`,
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            cursor: 'pointer'
+          }}
+        >
           HOCKEY WORKOUT — ADÈLE
         </h1>
 
