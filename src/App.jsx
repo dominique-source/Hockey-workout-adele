@@ -210,102 +210,54 @@ export default function App() {
     <div
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
-      style={{ width: '100%', maxWidth: 480, padding: '0 0 32px', margin: '0 auto' }}
+      style={{
+        width: '100%', maxWidth: 480, margin: '0 auto',
+        height: '100svh', display: 'flex', flexDirection: 'column',
+        overflow: 'hidden', padding: '0 0 env(safe-area-inset-bottom, 0px)'
+      }}
     >
 
-      {/* Header */}
+      {/* ── Header ───────────────────────────────────────────────── */}
       <div style={{
-        padding: '16px 20px 14px',
+        padding: '6px 10px',
         borderBottom: '1px solid var(--border)',
-        marginBottom: 16,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        flexShrink: 0
       }}>
-        <button
-          onClick={goHome}
-          style={{
-            background: 'none', border: 'none', color: 'var(--text3)',
-            fontSize: 20, padding: '4px 8px', borderRadius: 8
-          }}
-          title="Accueil"
-        >
-          ←
-        </button>
+        <button onClick={goHome} style={{
+          background: 'none', border: 'none', color: 'var(--text3)',
+          fontSize: 18, padding: '4px 6px', borderRadius: 8
+        }}>←</button>
 
-        <div style={{ textAlign: 'center', flex: 1 }}>
-          <h1 style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 28, letterSpacing: 4, lineHeight: 1,
-            background: `linear-gradient(90deg, ${accentColor} 0%, #f9f002 100%)`,
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-          }}>
-            HOCKEY WORKOUT
-          </h1>
-          <p style={{ fontSize: 10, color: 'var(--text4)', letterSpacing: 2 }}>
-            ADÈLE · 30 MIN · SANS PATINS
-          </p>
-        </div>
+        <h1 style={{
+          fontFamily: "'Bebas Neue', sans-serif",
+          fontSize: 20, letterSpacing: 4, lineHeight: 1,
+          background: `linear-gradient(90deg, ${accentColor} 0%, #f9f002 100%)`,
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+        }}>
+          HOCKEY WORKOUT — ADÈLE
+        </h1>
 
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <SpotifyButton size="compact" />
-          <button
-            onClick={toggleTheme}
-            title={darkMode ? 'Mode clair' : 'Mode sombre'}
-            style={{
-              width: 36, height: 36, borderRadius: 999, flexShrink: 0,
-              background: 'var(--surface2)', border: '1px solid var(--border2)',
-              color: 'var(--text)', fontSize: 16,
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}
-          >
+          <button onClick={toggleTheme} style={{
+            width: 32, height: 32, borderRadius: 999, flexShrink: 0,
+            background: 'var(--surface2)', border: '1px solid var(--border2)',
+            color: 'var(--text)', fontSize: 14,
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>
             {darkMode ? '☀️' : '🌙'}
           </button>
         </div>
       </div>
 
-      {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, padding: '0 16px', marginBottom: 16 }}>
-        {[
-          { val: curEx, lbl: 'complétés' },
-          { val: EXERCISES.length - curEx, lbl: 'restants' },
-          { val: `${remMin}:${String(remSec).padStart(2,'0')}`, lbl: 'restant' },
-        ].map(({ val, lbl }) => (
-          <div key={lbl} style={{
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
-            borderRadius: 10, padding: '10px 8px', textAlign: 'center'
-          }}>
-            <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 26, lineHeight: 1, color: accentColor }}>{val}</div>
-            <div style={{ fontSize: 10, color: 'var(--text4)', marginTop: 3, letterSpacing: 1 }}>{lbl}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Phase badge */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-        <span style={{
-          padding: '5px 20px', borderRadius: 999,
-          fontFamily: "'Bebas Neue',sans-serif", fontSize: 16, letterSpacing: 3,
-          background: isWork ? `${accentColor}22` : 'rgba(57,255,20,0.12)',
-          color: isWork ? accentColor : '#39ff14',
-          border: `1px solid ${isWork ? accentColor : '#39ff14'}44`,
-          transition: 'all 0.3s'
-        }}>
-          {isWork ? 'TRAVAIL' : 'REPOS'}
-        </span>
-      </div>
-
-      {/* Timer ring */}
-      <div style={{ padding: '0 16px', marginBottom: 14 }}>
-        <TimerRing timeLeft={timeLeft} maxTime={isWork ? WORK : REST} isWork={isWork} color={accentColor} />
-      </div>
-
-      {/* Progress */}
-      <div style={{ padding: '0 16px', marginBottom: 16 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 11, color: 'var(--text4)' }}>
-          <span>Exercice {curEx + 1} / {EXERCISES.length}</span>
+      {/* ── Progress bar ─────────────────────────────────────────── */}
+      <div style={{ padding: '5px 12px 0', flexShrink: 0 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text4)', marginBottom: 3 }}>
+          <span>Ex. {curEx + 1} / {EXERCISES.length}</span>
           <span>{totalPct}%</span>
         </div>
-        <div style={{ height: 4, background: 'var(--border)', borderRadius: 2, overflow: 'hidden' }}>
+        <div style={{ height: 3, background: 'var(--border)', borderRadius: 2, overflow: 'hidden' }}>
           <div style={{
             height: '100%', borderRadius: 2,
             background: `linear-gradient(90deg, ${accentColor}, #f9f002)`,
@@ -314,36 +266,67 @@ export default function App() {
         </div>
       </div>
 
-      {/* Exercise card */}
-      <div style={{ padding: '0 16px', marginBottom: 12 }}>
+      {/* ── Timer + Stats ─────────────────────────────────────────── */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '6px 12px', flexShrink: 0
+      }}>
+        <TimerRing
+          size={110}
+          timeLeft={timeLeft}
+          maxTime={isWork ? WORK : REST}
+          isWork={isWork}
+          color={accentColor}
+        />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+          {[
+            { val: curEx, lbl: 'complétés' },
+            { val: EXERCISES.length - curEx, lbl: 'restants' },
+            { val: `${remMin}:${String(remSec).padStart(2,'0')}`, lbl: 'temps restant' },
+          ].map(({ val, lbl }) => (
+            <div key={lbl} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              borderRadius: 8, padding: '4px 10px'
+            }}>
+              <span style={{ fontSize: 10, color: 'var(--text4)', letterSpacing: 1 }}>{lbl}</span>
+              <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 20, lineHeight: 1, color: accentColor }}>{val}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Exercise card ─────────────────────────────────────────── */}
+      <div style={{ flex: 1, minHeight: 0, padding: '0 10px', overflow: 'hidden' }}>
         <div style={{
+          height: '100%',
           background: 'var(--surface)',
           border: `1px solid ${accentColor}33`,
-          borderRadius: 16, overflow: 'hidden'
+          borderRadius: 14, overflow: 'hidden',
+          display: 'flex', flexDirection: 'column'
         }}>
-          <div style={{ height: 3, background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
+          <div style={{ height: 3, background: `linear-gradient(90deg, ${accentColor}, transparent)`, flexShrink: 0 }} />
 
-          <div style={{ padding: '14px 16px 12px' }}>
-            {/* Label "PROCHAIN EXERCICE" pendant le repos */}
+          <div style={{ padding: '8px 12px 6px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+            {/* Label repos */}
             {!isWork && nextEx && (
               <div style={{
-                fontSize: 10, letterSpacing: 2, color: '#39ff14',
-                marginBottom: 8, fontFamily: "'Bebas Neue',sans-serif"
-              }}>
-                ▶ PROCHAIN EXERCICE
-              </div>
+                fontSize: 9, letterSpacing: 2, color: '#39ff14',
+                marginBottom: 4, fontFamily: "'Bebas Neue',sans-serif", flexShrink: 0
+              }}>▶ PROCHAIN EXERCICE</div>
             )}
 
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
+            {/* Nom + catégorie */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4, gap: 8, flexShrink: 0 }}>
               <h2 style={{
                 fontFamily: "'Bebas Neue',sans-serif",
-                fontSize: 22, letterSpacing: 1.5, lineHeight: 1.1,
+                fontSize: 19, letterSpacing: 1.2, lineHeight: 1.1,
                 color: 'var(--text)', flex: 1
               }}>
                 {displayEx.name}
               </h2>
               <span style={{
-                fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
+                fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
                 background: `${catColor}18`, color: catColor,
                 border: `1px solid ${catColor}33`, letterSpacing: 1, whiteSpace: 'nowrap'
               }}>
@@ -351,17 +334,21 @@ export default function App() {
               </span>
             </div>
 
+            {/* Description */}
             <p style={{
-              fontSize: 13, lineHeight: 1.6,
-              color: 'var(--text2)', marginBottom: 12
+              fontSize: 11.5, lineHeight: 1.45,
+              color: 'var(--text2)', marginBottom: 6, flexShrink: 0
             }}>
               {displayEx.desc}
             </p>
 
+            {/* Animation */}
             <div style={{
+              flex: 1, minHeight: 0,
               background: 'rgba(0,0,0,0.3)',
               border: '1px solid rgba(255,255,255,0.06)',
-              borderRadius: 10, padding: '10px 8px'
+              borderRadius: 8, padding: '4px 6px',
+              display: 'flex', alignItems: 'center'
             }}>
               <StickFigure animType={displayEx.anim} accentColor={accentColor} isPlaying={playing} />
             </div>
@@ -369,25 +356,16 @@ export default function App() {
         </div>
       </div>
 
-      {/* Next exercise hint — uniquement en mode travail */}
-      <div style={{ padding: '0 16px', marginBottom: 16 }}>
-        <p style={{ fontSize: 12, color: 'var(--text4)', fontStyle: 'italic', textAlign: 'center' }}>
-          {isWork
-            ? (nextEx ? `Prochain : ${nextEx.name}` : 'Dernier exercice !')
-            : (!nextEx ? 'Dernier sprint !' : '')}
-        </p>
-      </div>
-
-      {/* Controls */}
-      <div style={{ display: 'flex', gap: 10, padding: '0 16px' }}>
+      {/* ── Controls ──────────────────────────────────────────────── */}
+      <div style={{ display: 'flex', gap: 8, padding: '6px 10px 8px', flexShrink: 0 }}>
         <button
           onClick={skipPrev}
           aria-label="Précédent"
           style={{
-            width: 52, height: 52, borderRadius: 999,
+            width: 46, height: 46, borderRadius: 999,
             background: 'var(--surface2)',
             border: '1px solid var(--border2)',
-            color: 'var(--text2)', fontSize: 18,
+            color: 'var(--text2)', fontSize: 16,
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}
         >⏮</button>
@@ -395,14 +373,14 @@ export default function App() {
         <button
           onClick={togglePlay}
           style={{
-            flex: 1, height: 52, borderRadius: 999,
+            flex: 1, height: 46, borderRadius: 999,
             background: playing
               ? 'rgba(249,240,2,0.12)'
               : `linear-gradient(135deg, ${accentColor} 0%, #b44aff 100%)`,
             border: playing ? '1px solid #f9f002' : 'none',
             color: playing ? '#f9f002' : '#fff',
             fontFamily: "'Bebas Neue',sans-serif",
-            fontSize: 22, letterSpacing: 3,
+            fontSize: 20, letterSpacing: 3,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
           }}
         >
@@ -416,7 +394,7 @@ export default function App() {
             width: 52, height: 52, borderRadius: 999,
             background: 'var(--surface2)',
             border: '1px solid var(--border2)',
-            color: 'var(--text2)', fontSize: 18,
+            color: 'var(--text2)', fontSize: 16,
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}
         >⏭</button>
