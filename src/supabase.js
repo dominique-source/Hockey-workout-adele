@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
 const url = import.meta.env.VITE_SUPABASE_URL
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+  || 'https://ajrzndegtmjfehznwpyz.supabase.co'
 
-export const supabase = (url && key) ? createClient(url, key) : null
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+  || 'sb_publishable_BMJrgc1L_lLYmqXEP1_F0A_CyYCH-1e'
+
+export const supabase = createClient(url, key)
 
 // ── Device ID — identifie le téléphone d'Adèle ───────────────────────
 export function getDeviceId() {
