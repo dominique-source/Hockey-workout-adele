@@ -1,6 +1,7 @@
 import React from 'react'
 import { getSessions, formatDate, formatElapsed } from '../history.js'
 import SpotifyButton from './SpotifyButton.jsx'
+import BadgeGrid from './BadgeGrid.jsx'
 
 export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
   const sessions = getSessions()
@@ -96,6 +97,11 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
         >
           ▶ COMMENCER
         </button>
+      </div>
+
+      {/* Badges */}
+      <div style={{ marginBottom: 24 }}>
+        <BadgeGrid />
       </div>
 
       {/* History */}
