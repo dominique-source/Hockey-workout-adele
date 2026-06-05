@@ -163,6 +163,20 @@ export default function App() {
 
   useEffect(() => () => clearInterval(intervalRef.current), [])
 
+  // ── Swipe left → exercice suivant ───────────────────────────────────
+  const touchStartX = useRef(null)
+
+  const onTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const onTouchEnd = (e) => {
+    if (touchStartX.current === null) return
+    const dx = touchStartX.current - e.changedTouches[0].clientX
+    touchStartX.current = null
+    if (dx > 60) skipNext() // swipe gauche → suivant
+  }
+
   const displayEx = (!isWork && nextEx) ? nextEx : ex
   const accentColor = displayEx?.color || '#ff3cac'
   const catColor = CAT_COLOR[displayEx?.cat] || '#fff'
@@ -193,7 +207,11 @@ export default function App() {
   // ── Workout ──────────────────────────────────────────────────────────
 
   return (
-    <div style={{ width: '100%', maxWidth: 480, padding: '0 0 32px', margin: '0 auto' }}>
+    <div
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      style={{ width: '100%', maxWidth: 480, padding: '0 0 32px', margin: '0 auto' }}
+    >
 
       {/* Header */}
       <div style={{
