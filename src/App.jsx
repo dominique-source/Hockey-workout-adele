@@ -174,7 +174,8 @@ export default function App() {
     if (touchStartX.current === null) return
     const dx = touchStartX.current - e.changedTouches[0].clientX
     touchStartX.current = null
-    if (dx > 60) skipNext() // swipe gauche → suivant
+    if (dx > 60) skipNext()   // swipe gauche → suivant
+    if (dx < -60) skipPrev()  // swipe droit  → précédent
   }
 
   const displayEx = (!isWork && nextEx) ? nextEx : ex
