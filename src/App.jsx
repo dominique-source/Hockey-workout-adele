@@ -6,6 +6,7 @@ import StickFigure from './components/StickFigure.jsx'
 import TimerRing from './components/TimerRing.jsx'
 import FinishScreen from './components/FinishScreen.jsx'
 import WelcomeScreen from './components/WelcomeScreen.jsx'
+import SpotifyButton from './components/SpotifyButton.jsx'
 
 const WORK = 20
 const REST = 20
@@ -226,18 +227,21 @@ export default function App() {
           </p>
         </div>
 
-        <button
-          onClick={toggleTheme}
-          title={darkMode ? 'Mode clair' : 'Mode sombre'}
-          style={{
-            width: 36, height: 36, borderRadius: 999,
-            background: 'var(--surface2)', border: '1px solid var(--border2)',
-            color: 'var(--text)', fontSize: 16,
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
-          }}
-        >
-          {darkMode ? '☀️' : '🌙'}
-        </button>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <SpotifyButton size="compact" />
+          <button
+            onClick={toggleTheme}
+            title={darkMode ? 'Mode clair' : 'Mode sombre'}
+            style={{
+              width: 36, height: 36, borderRadius: 999, flexShrink: 0,
+              background: 'var(--surface2)', border: '1px solid var(--border2)',
+              color: 'var(--text)', fontSize: 16,
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
       </div>
 
       {/* Stats row */}

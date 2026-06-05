@@ -1,5 +1,6 @@
 import React from 'react'
 import { getSessions, formatDate, formatElapsed } from '../history.js'
+import SpotifyButton from './SpotifyButton.jsx'
 
 export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
   const sessions = getSessions()
@@ -77,6 +78,11 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
               <div style={{ fontSize: 10, color: 'var(--text4)', marginTop: 2, letterSpacing: 1 }}>{lbl}</div>
             </div>
           ))}
+        </div>
+
+        {/* Spotify */}
+        <div style={{ width: '100%', maxWidth: 340, marginBottom: 12 }}>
+          <SpotifyButton />
         </div>
 
         {/* Start button */}
