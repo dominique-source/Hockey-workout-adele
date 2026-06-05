@@ -1,8 +1,12 @@
-import React from 'react'
-import { getSessions, formatDate, formatElapsed } from '../history.js'
+import React, { useState, useEffect } from 'react'
+import { fetchSessions, getSessions, formatDate, formatElapsed } from '../history.js'
 
 export default function FinishScreen({ onRestart, onHome, exercisesDone, elapsed }) {
-  const sessions = getSessions()
+  const [sessions, setSessions] = useState(getSessions)
+
+  useEffect(() => {
+    fetchSessions().then(setSessions)
+  }, [])
 
   return (
     <div style={{

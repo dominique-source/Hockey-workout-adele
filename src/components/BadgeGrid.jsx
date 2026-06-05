@@ -161,8 +161,8 @@ function BadgeModal({ badge, onClose }) {
   )
 }
 
-export default function BadgeGrid() {
-  const badges = computeBadges(getSessions())
+export default function BadgeGrid({ sessions }) {
+  const badges = computeBadges(sessions ?? getSessions())
   const unlocked = badges.filter(b => b.unlocked).length
   const [selected, setSelected] = useState(null)
   const selectedBadge = badges.find(b => b.id === selected)

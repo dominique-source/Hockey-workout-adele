@@ -1,10 +1,18 @@
-import React from 'react'
-import { getSessions, formatDate, formatElapsed } from '../history.js'
+import React, { useState, useEffect } from 'react'
+import { fetchSessions, getSessions, formatDate, formatElapsed } from '../history.js'
 import SpotifyButton from './SpotifyButton.jsx'
 import BadgeGrid from './BadgeGrid.jsx'
 
 export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
-  const sessions = getSessions()
+  const [sessions, setSessions] = useState(getSessions) // localStorage immédiat
+  const [syncing, setSyncing] = useState(true)
+
+  // Charge depuis Supabase au montage
+  useEffect(() => {
+    fetchSessions()
+      .then(data => setSessions(data))
+      .finally(() => setSyncing(false))
+  }, [])
 
   return (
     <div style={{
@@ -13,8 +21,14 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
       display: 'flex', flexDirection: 'column'
     }}>
 
-      {/* Theme toggle */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 0' }}>
+      {/* Theme toggle + sync indicator */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px 0' }}>
+        <div style={{ fontSize: 11, color: 'var(--text4)', letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 5 }}>
+          {syncing
+            ? <><span style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }}>⟳</span> sync…</>
+            : <><span style={{ color: '#39ff14' }}>●</span> cloud</>
+          }
+        </div>
         <button
           onClick={onToggleTheme}
           title={darkMode ? 'Mode clair' : 'Mode sombre'}
@@ -35,10 +49,8 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
         alignItems: 'center', justifyContent: 'center',
         padding: '20px 24px 0', textAlign: 'center'
       }}>
-        {/* Hockey emoji */}
         <div style={{ fontSize: 64, marginBottom: 12, lineHeight: 1 }}>🏒</div>
 
-        {/* ADÈLE */}
         <h1 style={{
           fontFamily: "'Bebas Neue', sans-serif",
           fontSize: 'clamp(72px, 22vw, 110px)',
@@ -53,17 +65,17 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
         <p style={{
           fontFamily: "'Bebas Neue', sans-serif",
           fontSize: 18, letterSpacing: 5,
-          color: 'var(--text3)', marginBottom: 36
+          color: 'var(--text3)', marginBottom: 28
         }}>
           HOCKEY WORKOUT
         </p>
 
-        {/* Stat chips */}
-        <div style={{ display: 'flex', gap: 10, marginBottom: 36, flexWrap: 'wrap', justifyContent: 'center' }}>
+        {/* Stat chips — total sessions from cloud */}
+        <div style={{ display: 'flex', gap: 10, marginBottom: 28, flexWrap: 'wrap', justifyContent: 'center' }}>
           {[
             { val: '45', lbl: 'exercices' },
             { val: '30', lbl: 'minutes' },
-            { val: '3', lbl: 'catégories' },
+            { val: sessions.length || '0', lbl: 'sessions' },
             { val: '20s', lbl: 'par exercice' },
           ].map(({ val, lbl }) => (
             <div key={lbl} style={{
@@ -100,16 +112,16 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
       </div>
 
       {/* Badges */}
-      <div style={{ marginBottom: 24 }}>
-        <BadgeGrid />
+      <div style={{ marginTop: 28, marginBottom: 24 }}>
+        <BadgeGrid sessions={sessions} />
       </div>
 
       {/* History */}
       {sessions.length > 0 && (
-        <div style={{ padding: '32px 20px 0' }}>
+        <div style={{ padding: '0 20px' }}>
           <p style={{
             fontSize: 11, letterSpacing: 2, color: 'var(--text4)',
-            marginBottom: 10, textAlign: 'center'
+            marginBottom: 10
           }}>
             DERNIÈRES SESSIONS
           </p>
@@ -117,8 +129,7 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
             {sessions.slice(0, 5).map((s) => (
               <div key={s.id} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
+                background: 'var(--surface)', border: '1px solid var(--border)',
                 borderRadius: 10, padding: '10px 14px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -130,10 +141,7 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
                     <div style={{ fontSize: 11, color: 'var(--text4)' }}>{formatDate(s.date)}</div>
                   </div>
                 </div>
-                <div style={{
-                  fontFamily: "'Bebas Neue',sans-serif",
-                  fontSize: 18, color: '#39ff14', letterSpacing: 1
-                }}>
+                <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 18, color: '#39ff14', letterSpacing: 1 }}>
                   {formatElapsed(s.elapsed)}
                 </div>
               </div>
@@ -142,6 +150,7 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
         </div>
       )}
 
+      <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
     </div>
   )
 }
