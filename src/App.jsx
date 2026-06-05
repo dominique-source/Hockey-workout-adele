@@ -134,8 +134,9 @@ export default function App() {
 
   useEffect(() => () => clearInterval(intervalRef.current), [])
 
-  const accentColor = ex?.color || '#ff3cac'
-  const catColor = CAT_COLOR[ex?.cat] || '#fff'
+  const displayEx = (!isWork && nextEx) ? nextEx : ex
+  const accentColor = displayEx?.color || '#ff3cac'
+  const catColor = CAT_COLOR[displayEx?.cat] || '#fff'
 
   const toggleTheme = () => setDarkMode(d => !d)
 
@@ -273,20 +274,30 @@ export default function App() {
           <div style={{ height: 3, background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
 
           <div style={{ padding: '14px 16px 12px' }}>
+            {/* Label "PROCHAIN EXERCICE" pendant le repos */}
+            {!isWork && nextEx && (
+              <div style={{
+                fontSize: 10, letterSpacing: 2, color: '#39ff14',
+                marginBottom: 8, fontFamily: "'Bebas Neue',sans-serif"
+              }}>
+                ▶ PROCHAIN EXERCICE
+              </div>
+            )}
+
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
               <h2 style={{
                 fontFamily: "'Bebas Neue',sans-serif",
                 fontSize: 22, letterSpacing: 1.5, lineHeight: 1.1,
                 color: 'var(--text)', flex: 1
               }}>
-                {ex.name}
+                {displayEx.name}
               </h2>
               <span style={{
                 fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
                 background: `${catColor}18`, color: catColor,
                 border: `1px solid ${catColor}33`, letterSpacing: 1, whiteSpace: 'nowrap'
               }}>
-                {CAT_LABEL[ex.cat]}
+                {CAT_LABEL[displayEx.cat]}
               </span>
             </div>
 
@@ -294,7 +305,7 @@ export default function App() {
               fontSize: 13, lineHeight: 1.6,
               color: 'var(--text2)', marginBottom: 12
             }}>
-              {ex.desc}
+              {displayEx.desc}
             </p>
 
             <div style={{
@@ -302,18 +313,18 @@ export default function App() {
               border: '1px solid rgba(255,255,255,0.06)',
               borderRadius: 10, padding: '10px 8px'
             }}>
-              <StickFigure animType={ex.anim} accentColor={accentColor} isPlaying={playing} />
+              <StickFigure animType={displayEx.anim} accentColor={accentColor} isPlaying={playing} />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Next exercise */}
+      {/* Next exercise hint — uniquement en mode travail */}
       <div style={{ padding: '0 16px', marginBottom: 16 }}>
         <p style={{ fontSize: 12, color: 'var(--text4)', fontStyle: 'italic', textAlign: 'center' }}>
           {isWork
             ? (nextEx ? `Prochain : ${nextEx.name}` : 'Dernier exercice !')
-            : (nextEx ? `Repos — Prépare-toi pour : ${nextEx.name}` : 'Dernier sprint !')}
+            : (!nextEx ? 'Dernier sprint !' : '')}
         </p>
       </div>
 
