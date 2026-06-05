@@ -52,13 +52,9 @@ export default function WelcomeScreen({ onStart, darkMode, onToggleTheme }) {
         <p style={{
           fontFamily: "'Bebas Neue', sans-serif",
           fontSize: 18, letterSpacing: 5,
-          color: 'var(--text3)', marginBottom: 6
+          color: 'var(--text3)', marginBottom: 36
         }}>
           HOCKEY WORKOUT
-        </p>
-
-        <p style={{ fontSize: 12, color: 'var(--text4)', letterSpacing: 2, marginBottom: 36 }}>
-          30 MIN · 45 EXERCICES · SANS PATINS
         </p>
 
         {/* Stat chips */}
