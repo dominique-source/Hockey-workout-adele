@@ -26,6 +26,31 @@ export default function App() {
   const lastCountdown = useRef(-1)
   const intervalRef = useRef(null)
   const stateRef = useRef({ curEx: 0, isWork: true, timeLeft: WORK, totalElapsed: 0 })
+  const wakeLockRef = useRef(null)
+
+  // ── Wake Lock : garde l'écran allumé pendant le workout ─────────────
+  const requestWakeLock = useCallback(async () => {
+    if (!('wakeLock' in navigator)) return
+    try {
+      wakeLockRef.current = await navigator.wakeLock.request('screen')
+    } catch {}
+  }, [])
+
+  const releaseWakeLock = useCallback(() => {
+    wakeLockRef.current?.release()
+    wakeLockRef.current = null
+  }, [])
+
+  // Re-demande le wake lock si l'app revient au premier plan
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible' && playing) {
+        requestWakeLock()
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [playing, requestWakeLock])
 
   const { sayGo, sayStop, sayRest, sayCountdown, sayDone, speak } = useVoice()
 
@@ -71,6 +96,7 @@ export default function App() {
           saveSession(data)
           setFinishData(data)
           setScreen('finish')
+          releaseWakeLock()
           sayDone()
           return
         }
@@ -90,9 +116,11 @@ export default function App() {
     if (playing) {
       clearInterval(intervalRef.current)
       setPlaying(false)
+      releaseWakeLock()
     } else {
       setPlaying(true)
       intervalRef.current = setInterval(tick, 1000)
+      requestWakeLock()
       if (isWork) sayGo()
       else speak('Repos')
     }
