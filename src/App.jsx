@@ -81,14 +81,24 @@ export default function App() {
 
     if (st.timeLeft <= 0) {
       if (st.isWork) {
+        // Dernier exercice → fin directe, pas de repos
+        if (st.curEx + 1 >= EXERCISES.length) {
+          clearInterval(intervalRef.current)
+          const data = { exercises: EXERCISES.length, elapsed: st.totalElapsed }
+          saveSession(data)
+          setFinishData(data)
+          setScreen('finish')
+          releaseWakeLock()
+          sayDone()
+          return
+        }
         sayStop()
         st.isWork = false
         st.timeLeft = REST
         setIsWork(false)
         setTimeLeft(REST)
         lastCountdown.current = -1
-        const nextName = st.curEx + 1 < EXERCISES.length ? EXERCISES[st.curEx + 1].name : 'Terminé !'
-        sayRest(nextName)
+        sayRest(EXERCISES[st.curEx + 1].name)
       } else {
         st.curEx++
         if (st.curEx >= EXERCISES.length) {
