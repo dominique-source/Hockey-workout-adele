@@ -10,7 +10,7 @@ import SpotifyButton from './components/SpotifyButton.jsx'
 
 const WORK = 20
 const REST = 20
-const TOTAL_DURATION = 30 * 60
+const TOTAL_DURATION = EXERCISES.length * (WORK + REST)
 
 export default function App() {
   const [screen, setScreen] = useState('welcome') // 'welcome' | 'workout' | 'finish'
@@ -235,7 +235,7 @@ export default function App() {
             cursor: 'pointer'
           }}
         >
-          HOCKEY WORKOUT — ADÈLE
+          HOCKEY WORKOUT · ADÈLE
         </h1>
 
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
