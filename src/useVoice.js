@@ -10,7 +10,15 @@ export function useVoice() {
 
     const loadVoice = () => {
       const voices = synthRef.current.getVoices()
-      voiceRef.current = voices.find(v => v.lang.startsWith('fr')) || voices[0] || null
+      const fr = voices.filter(v => v.lang.startsWith('fr'))
+
+      // Noms de voix masculines connues (iOS: Thomas, Rémi — Android/Win: varies)
+      const maleKeywords = ['thomas', 'rémi', 'remi', 'nicolas', 'male', 'homme', 'guy']
+      const maleVoice = fr.find(v =>
+        maleKeywords.some(k => v.name.toLowerCase().includes(k))
+      )
+
+      voiceRef.current = maleVoice || fr[0] || voices[0] || null
     }
     synthRef.current.onvoiceschanged = loadVoice
     loadVoice()
@@ -29,7 +37,8 @@ export function useVoice() {
     } catch (_) {}
   }, [])
 
-  const speak = useCallback((text, rate = 1.0, pitch = 1.0) => {
+  // pitch 0.75 = voix grave masculine par défaut
+  const speak = useCallback((text, rate = 1.0, pitch = 0.75) => {
     if (!synthRef.current) return
     synthRef.current.cancel()
     const u = new SpeechSynthesisUtterance(text)
@@ -41,20 +50,20 @@ export function useVoice() {
 
   const sayGo = useCallback(() => {
     beep(1046, 80, 0.5)
-    setTimeout(() => speak('Partez !', 1.1, 1.1), 120)
+    setTimeout(() => speak('Partez !', 1.1, 0.8), 120)
   }, [beep, speak])
 
   const sayStop = useCallback(() => {
     beep(440, 200, 0.4)
-    setTimeout(() => speak('Stop !', 1.0, 0.9), 120)
+    setTimeout(() => speak('Stop !', 1.0, 0.75), 120)
   }, [beep, speak])
 
   const sayRest = useCallback((nextName) => {
-    setTimeout(() => speak(`Repos. Prochain exercice : ${nextName}`, 0.92, 1.0), 500)
+    setTimeout(() => speak(`Repos. Prochain exercice : ${nextName}`, 0.92, 0.75), 500)
   }, [speak])
 
   const sayCountdown = useCallback((n) => {
-    speak(String(n), 1.1, 1.05)
+    speak(String(n), 1.1, 0.8)
     if (n <= 3) beep(n === 1 ? 1100 : 880, 60, 0.3)
   }, [speak, beep])
 
@@ -62,7 +71,7 @@ export function useVoice() {
     beep(1046, 150, 0.5)
     setTimeout(() => beep(1318, 150, 0.5), 200)
     setTimeout(() => beep(1568, 300, 0.5), 400)
-    setTimeout(() => speak('Workout terminé ! Excellent travail Adèle !', 0.9, 1.0), 700)
+    setTimeout(() => speak('Workout terminé ! Excellent travail Adèle !', 0.9, 0.75), 700)
   }, [beep, speak])
 
   return { sayGo, sayStop, sayRest, sayCountdown, sayDone, speak }
